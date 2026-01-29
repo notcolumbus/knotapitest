@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-// @ts-ignore
-import KnotapiJS from "knotapi-js";
 
 export default function KnotLink() {
     const [loading, setLoading] = useState(false);
@@ -18,7 +16,7 @@ export default function KnotLink() {
             setLoading(true);
             setError(null);
 
-            // Step 1: Create session via backend
+            // Create session via backend
             const response = await fetch("/api/knot/create-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -42,7 +40,8 @@ export default function KnotLink() {
             setSessionId(sid);
             console.log("✅ Session created:", sid);
 
-            // Step 2: Open Knot SDK - exactly like your working code
+            // Dynamically import and open Knot SDK
+            const KnotapiJS = (await import("knotapi-js")).default;
             const knotapi = new KnotapiJS();
 
             knotapi.open({
@@ -53,25 +52,22 @@ export default function KnotLink() {
                 merchantIds: [merchantId],
                 entryPoint: "onboarding",
 
-                onSuccess: (product: any, details: any) => {
+                onSuccess: (data: any) => {
                     setLoading(false);
-                    console.log("✅ Success:", details);
-                    alert(`Successfully connected to ${details.merchantName || "merchant"}`);
+                    console.log("✅ Success:", data);
+                    alert(`Successfully connected!`);
                 },
-                onError: (product: any, errorCode: any, message: string) => {
-                    console.error("❌ Knot Link error:", product, errorCode, message);
-                    setError(`Error during Knot connection: ${message}`);
+                onError: (data: any) => {
+                    console.error("❌ Knot Link error:", data);
+                    setError(`Error during Knot connection`);
                     setLoading(false);
                 },
-                onExit: (product: any) => {
+                onExit: () => {
                     console.log("🚪 User exited the flow");
                     setLoading(false);
                 },
-                onEvent: (product: any, event: any, merchant: string, payload: any) => {
-                    console.log("📨 Event:", product, event, merchant, payload);
-                    if (event === 'MERCHANT_CONNECTED' || event === 'CONNECTION_SUCCESS' || event === 'SUCCESS') {
-                        console.log("🎉 Connection event detected");
-                    }
+                onEvent: (data: any) => {
+                    console.log("📨 Event:", data);
                 },
             });
         } catch (err) {
@@ -117,7 +113,7 @@ export default function KnotLink() {
             )}
 
             <div className="mb-4 text-sm">
-                <p><strong>Environment:</strong> Development</p>
+                <p><strong>Environment:</strong> Production</p>
                 <p><strong>Product:</strong> transaction_link</p>
             </div>
 
