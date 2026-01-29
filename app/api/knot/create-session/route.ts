@@ -25,7 +25,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const product = body.product || "card_switcher";
+        const product = body.product || "transaction_link";
 
         // Get credentials from environment
         const clientId = process.env.KNOT_CLIENT_ID || "a390e79d-2920-4440-9ba1-b747bc92790b";

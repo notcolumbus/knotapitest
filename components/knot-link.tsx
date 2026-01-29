@@ -22,7 +22,7 @@ export default function KnotLink() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     user_id: userId,
-                    product: "card_switcher"
+                    product: "transaction_link"
                 }),
             });
 
@@ -48,7 +48,7 @@ export default function KnotLink() {
                 sessionId: sid,
                 clientId: clientId,
                 environment: "production",
-                product: "card_switcher",
+                product: "transaction_link",
                 merchantIds: [merchantId],
                 entryPoint: "onboarding",
 
