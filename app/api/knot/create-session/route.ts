@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
         // Create payload
         // For transaction_link, the type should be "link" according to Knot docs
-        const sessionType = product === "transaction_link" ? "link" : product;
+        const sessionType = "transaction_link";
 
         const payload: any = {
             external_user_id: userId,
