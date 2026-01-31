@@ -7,7 +7,7 @@ export default function KnotLink() {
     const [error, setError] = useState<string | null>(null);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [userId, setUserId] = useState("prod_user_apple_tv_test");
-    const [merchantId, setMerchantId] = useState(991);
+    const [merchantId, setMerchantId] = useState(19); // DoorDash
 
     const clientId = process.env.NEXT_PUBLIC_KNOT_CLIENT_ID || "a390e79d-2920-4440-9ba1-b747bc92790b";
 
@@ -22,7 +22,8 @@ export default function KnotLink() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     user_id: userId,
-                    product: "transaction_link"
+                    product: "card_switcher",
+                    card_id: `card_${Date.now()}` // Required for card_switcher
                 }),
             });
 
@@ -48,26 +49,26 @@ export default function KnotLink() {
                 sessionId: sid,
                 clientId: clientId,
                 environment: "production",
-                product: "transaction_link",
+                product: "card_switcher",
                 merchantIds: [merchantId],
                 entryPoint: "onboarding",
 
                 onSuccess: (data: any) => {
                     setLoading(false);
-                    console.log("✅ Success:", data);
+                    console.log("Success:", data);
                     alert(`Successfully connected!`);
                 },
                 onError: (data: any) => {
-                    console.error("❌ Knot Link error:", data);
+                    console.error("Knot Link error:", data);
                     setError(`Error during Knot connection`);
                     setLoading(false);
                 },
                 onExit: () => {
-                    console.log("🚪 User exited the flow");
+                    console.log("User exited the flow");
                     setLoading(false);
                 },
                 onEvent: (data: any) => {
-                    console.log("📨 Event:", data);
+                    console.log("Event:", data);
                 },
             });
         } catch (err) {
@@ -102,7 +103,7 @@ export default function KnotLink() {
                     placeholder="e.g. 991 for Apple TV"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                    Common: 44 (Amazon), 16 (Netflix), 19 (DoorDash), 991 (Apple TV)
+                    Common: 19 (DoorDash), 44 (Amazon), 16 (Netflix), 991 (Apple TV)
                 </p>
             </div>
 
@@ -114,7 +115,8 @@ export default function KnotLink() {
 
             <div className="mb-4 text-sm">
                 <p><strong>Environment:</strong> Production</p>
-                <p><strong>Product:</strong> transaction_link</p>
+                <p><strong>Product:</strong> Card Switcher</p>
+                <p><strong>Use Case:</strong> Update payment method on merchant accounts</p>
             </div>
 
             <button
@@ -122,7 +124,7 @@ export default function KnotLink() {
                 disabled={loading}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-                {loading ? "Connecting..." : "🚀 Connect with Knot"}
+                {loading ? "Connecting..." : "� Switch Payment Card"}
             </button>
 
             {error && (

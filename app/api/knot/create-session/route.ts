@@ -25,7 +25,8 @@ export async function POST(request: Request) {
             );
         }
 
-        const product = body.product || "transaction_link";
+        const product = body.product || "card_switcher";
+        const cardId = body.card_id;
 
         // Get credentials from environment
         const clientId = process.env.KNOT_CLIENT_ID || "a390e79d-2920-4440-9ba1-b747bc92790b";
@@ -46,18 +47,20 @@ export async function POST(request: Request) {
         const apiUrl = "https://production.knotapi.com/session/create";
 
         // Create payload
-        // For transaction_link, the type should be "link" according to Knot docs
-        const sessionType = "transaction_link";
-
         const payload: any = {
             external_user_id: userId,
-            type: sessionType,
+            type: product,
         };
+
+        // Add card_id for card_switcher
+        if (product === "card_switcher" && cardId) {
+            payload.card_id = cardId;
+        }
 
         console.log("🔑 Creating Knot session:");
         console.log("  User ID:", userId);
         console.log("  Product:", product);
-        console.log("  Session Type:", sessionType);
+        console.log("  Payload:", JSON.stringify(payload));
         console.log("  API URL:", apiUrl);
 
         const response = await fetch(apiUrl, {
