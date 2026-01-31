@@ -47,15 +47,14 @@ export async function POST(request: Request) {
         const apiUrl = "https://production.knotapi.com/session/create";
 
         // Create payload
+        // For card_switcher, the type should be "link" according to Knot docs
         const payload: any = {
             external_user_id: userId,
-            type: product,
+            type: "link",
         };
 
-        // Add card_id for card_switcher
-        if (product === "card_switcher" && cardId) {
-            payload.card_id = cardId;
-        }
+        // Card switcher doesn't need card_id in session creation
+        // The card details are collected during the SDK flow
 
         console.log("🔑 Creating Knot session:");
         console.log("  User ID:", userId);

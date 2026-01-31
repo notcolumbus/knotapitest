@@ -22,8 +22,7 @@ export default function KnotLink() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     user_id: userId,
-                    product: "card_switcher",
-                    card_id: `card_${Date.now()}` // Required for card_switcher
+                    product: "card_switcher"
                 }),
             });
 
